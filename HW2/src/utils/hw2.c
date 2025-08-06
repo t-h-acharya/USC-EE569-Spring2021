@@ -2,7 +2,8 @@
 
 Image *alloc_image(int height, int width, int channels) {
     if ((height <= 0) || (width <= 0) || (channels <= 0)) {
-        exit(1);
+        fprintf(stderr, "ERROR: In alloc_image(); Invalid Image Dimensions\n");
+        return NULL;
     }
 
     Image *image = (Image *)malloc(sizeof(Image));
@@ -12,7 +13,7 @@ Image *alloc_image(int height, int width, int channels) {
     image->data = (float ***)malloc(height * sizeof(float **));
     if (!image->data) {
         fprintf(stderr, "ERROR: In alloc_image(); Image could not be allocated\n");
-        exit(EXIT_FAILURE);
+        return NULL;
     }
     for (int i = 0; i < height; i++) {
         image->data[i] = (float **)malloc(width * sizeof(float *));
@@ -26,7 +27,7 @@ Image *alloc_image(int height, int width, int channels) {
             free(image->data);
             free(image);
             fprintf(stderr, "ERROR: In alloc_image(); Image could not be allocated\n");
-            exit(EXIT_FAILURE);
+            return NULL;
          }
          for (int j = 0; j < width; j++) {
             image->data[i][j] = (float *)malloc(channels * sizeof(float));
@@ -40,7 +41,7 @@ Image *alloc_image(int height, int width, int channels) {
                 free(image->data);
                 free(image);
                 fprintf(stderr, "ERROR: In alloc_image(); Image could not be allocated\n");
-                exit(EXIT_FAILURE);
+                return NULL;
             }
          }
     }
@@ -85,7 +86,7 @@ Image *read_image(string filename, int height, int width, int channels) {
     if (!file_ptr)
     {
         fprintf(stderr, "ERROR: In read_image(); File could not be opened\n");
-        exit(EXIT_FAILURE);    
+        return NULL;    
     }
 
     BYTE temp_buffer;
@@ -98,6 +99,7 @@ Image *read_image(string filename, int height, int width, int channels) {
             }
         }
     }
+    fclose(file_ptr);
     return image;
 }
 
@@ -110,7 +112,7 @@ void write_image(string filename, Image *image) {
     if (!file_ptr)
     {
         fprintf(stderr, "ERROR: In write_image(); File could not be opened\n");
-        exit(EXIT_FAILURE);    
+        return;    
     }
 
     BYTE temp_buffer;
@@ -123,16 +125,17 @@ void write_image(string filename, Image *image) {
             }
         }
     }
+    fclose(file_ptr);
     return;
 }
 
 BYTE to_BYTE(float value) {
-    if (value >= MAX) {
-        return MAX;
+    if (value >= MAX_INTENSITY) {
+        return MAX_INTENSITY;
     }
-    else if (value <= MIN)
+    else if (value <= MIN_INTENSITY)
     {
-       return MIN;
+       return MIN_INTENSITY;
     }
     else {
         return round(value);

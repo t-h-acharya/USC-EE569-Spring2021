@@ -19,8 +19,8 @@ typedef struct
 } Image;
 
 // Constants
-const BYTE MAX = UINT8_MAX;
-const BYTE MIN = 0;
+const BYTE MAX_INTENSITY = UINT8_MAX;
+const BYTE MIN_INTENSITY = 0;
 
 // Functions
 Image *alloc_image(int height, int width, int channels);
