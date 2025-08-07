@@ -1,18 +1,18 @@
 #include "hw2.h"
 
-Image *alloc_image(int height, int width, int channels) {
+Matrix *alloc_matrix(int height, int width, int channels) {
     if ((height <= 0) || (width <= 0) || (channels <= 0)) {
-        fprintf(stderr, "ERROR: alloc_image() \n\t Invalid Image Dimensions\n");
+        fprintf(stderr, "ERROR: alloc_matrix() \n\t Invalid Matrix Dimensions\n");
         return NULL;
     }
 
-    Image *image = (Image *)malloc(sizeof(Image));
+    Matrix *image = (Matrix *)malloc(sizeof(Matrix));
     image->height = height;
     image->width = width;
     image->channels = channels;
     image->data = (float ***)malloc(height * sizeof(float **));
     if (!image->data) {
-        fprintf(stderr, "ERROR: alloc_image() \n\t Image could not be allocated\n");
+        fprintf(stderr, "ERROR: alloc_matrix() \n\t Matrix could not be allocated\n");
         return NULL;
     }
     for (int i = 0; i < height; i++) {
@@ -26,7 +26,7 @@ Image *alloc_image(int height, int width, int channels) {
             }
             free(image->data);
             free(image);
-            fprintf(stderr, "ERROR: alloc_image() \n\t Image could not be allocated\n");
+            fprintf(stderr, "ERROR: alloc_matrix() \n\t Matrix could not be allocated\n");
             return NULL;
          }
          for (int j = 0; j < width; j++) {
@@ -40,7 +40,7 @@ Image *alloc_image(int height, int width, int channels) {
                 }
                 free(image->data);
                 free(image);
-                fprintf(stderr, "ERROR: alloc_image() \n\t Image could not be allocated\n");
+                fprintf(stderr, "ERROR: alloc_matrix() \n\t Matrix could not be allocated\n");
                 return NULL;
             }
          }
@@ -49,11 +49,11 @@ Image *alloc_image(int height, int width, int channels) {
     return image;
 }
 
-Image *copy_image(Image *image) {
+Matrix *copy_matrix(Matrix *image) {
     int height = image->height;
     int width = image->width;
     int channels = image->channels;
-    Image *copied_image = alloc_image(height, width, channels);
+    Matrix *copied_image = alloc_matrix(height, width, channels);
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             for (int k = 0; k < channels; k++){
@@ -64,7 +64,7 @@ Image *copy_image(Image *image) {
     return copied_image;
 }
 
-void free_image(Image *image) {
+void free_matrix(Matrix *image) {
     int height = image->height;
     int width = image->width;
 
@@ -79,12 +79,12 @@ void free_image(Image *image) {
     return;
 }
 
-Image *read_image(string filename, int height, int width, int channels) {
-    Image *image = alloc_image(height, width, channels);
+Matrix *read_matrix(string filename, int height, int width, int channels) {
+    Matrix *image = alloc_matrix(height, width, channels);
     FILE *file_ptr = fopen(filename, "rb");
     if (!file_ptr)
     {
-        fprintf(stderr, "ERROR: read_image() \n\t File could not be opened\n");
+        fprintf(stderr, "ERROR: read_matrix() \n\t File could not be opened\n");
         return NULL;    
     }
 
@@ -102,7 +102,7 @@ Image *read_image(string filename, int height, int width, int channels) {
     return image;
 }
 
-void write_image(string filename, Image *image) {
+void write_matrix(string filename, Matrix *image) {
     int height = image->height;
     int width = image->width;
     int channels = image->channels;
@@ -110,7 +110,7 @@ void write_image(string filename, Image *image) {
     FILE *file_ptr = fopen(filename, "wb");
     if (!file_ptr)
     {
-        fprintf(stderr, "ERROR: write_image() \n\t File could not be opened\n");
+        fprintf(stderr, "ERROR: write_matrix() \n\t File could not be opened\n");
         return;    
     }
 

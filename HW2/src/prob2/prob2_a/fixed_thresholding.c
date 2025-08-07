@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
     char out_filename[100];
     sprintf(out_filename, "../data/output/fixed_thresholding_%d.raw", threshold);
 
-    Image *image = read_image(filename, height, width, channels);
+    Matrix *image = read_matrix(filename, height, width, channels);
     if (!image) {
         exit(EXIT_FAILURE);
     }
@@ -27,9 +27,9 @@ int main(int argc, char **argv) {
         }
     }
 
-    write_image(out_filename, image);
+    write_matrix(out_filename, image);
     
-    free_image(image);
+    free_matrix(image);
     
     exit(EXIT_SUCCESS);
 }

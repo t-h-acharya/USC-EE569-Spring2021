@@ -20,15 +20,16 @@ typedef struct
     int width;
     int channels;
     float ***data;
-} Image;
+} Matrix;
 
 // Functions
-Image *alloc_image(int height, int width, int channels);
-Image *copy_image(Image *image);
-void free_image(Image *image);
+Matrix *alloc_matrix(int height, int width, int channels);
+Matrix *copy_matrix(Matrix *image);
+void free_matrix(Matrix *image);
 
-Image *read_image(string filename, int height, int width, int channels);
-void write_image(string filename, Image *image);
+Matrix *read_matrix(string filename, int height, int width, int channels);
+void write_matrix(string filename, Matrix *image);
 
 BYTE to_BYTE(float value);
+
 #endif

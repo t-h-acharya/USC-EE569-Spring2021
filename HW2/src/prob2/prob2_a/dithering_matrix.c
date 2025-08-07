@@ -21,22 +21,21 @@ int main(int argc, char **argv) {
     char out_filename[100];
     sprintf(out_filename, "../data/output/dithering_matrix_%d.raw", N);
 
-    Image *image = read_image(filename, height, width, channels);
+    Matrix *image = read_matrix(filename, height, width, channels);
     if (!image) {
         exit(EXIT_FAILURE);
     }
 
     int **dithering_matrix = get_dithering_matrix(N);
     if(!dithering_matrix) {
-        free_image(image);
+        free_matrix(image);
         exit(EXIT_FAILURE);
     }
 
     float **thresholding_matrix = (float **)malloc(N * sizeof(float *));
     if (!thresholding_matrix) {
         fprintf(stderr, "ERROR: main() \n\t Memory could not be allocated for thresholding matrix\n");
-        free(thresholding_matrix);
-        free_image(image);
+        free_matrix(image);
     }
 
     for (int i = 0; i < N; i++) {
@@ -47,7 +46,7 @@ int main(int argc, char **argv) {
                 free(thresholding_matrix[j]);
             }
             free(thresholding_matrix);
-            free_image(image);
+            free_matrix(image);
             exit(EXIT_FAILURE);
         }
     }
@@ -66,7 +65,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    write_image(out_filename, image);
+    write_matrix(out_filename, image);
 
     for (int i = 0; i < N; i++) {
         free(dithering_matrix[i]);
@@ -74,7 +73,7 @@ int main(int argc, char **argv) {
     }
     free(dithering_matrix);
     free(thresholding_matrix);
-    free_image(image);
+    free_matrix(image);
     exit(EXIT_SUCCESS);
 }
 
