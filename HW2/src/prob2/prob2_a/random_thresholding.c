@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
     int channels = atoi(argv[4]);
 
     char out_filename[100];
-    sprintf(out_filename, "./data/output/random_thresholding.raw");
+    sprintf(out_filename, "../data/output/random_thresholding.raw");
 
     Image *image = read_image(filename, height, width, channels);
     if (!image) {
