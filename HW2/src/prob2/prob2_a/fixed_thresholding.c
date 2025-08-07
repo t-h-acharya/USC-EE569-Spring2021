@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
     int channels = atoi(argv[4]);
     int threshold = atoi(argv[5]);
     char out_filename[100];
-    sprintf(out_filename, "./data/output/fixed_thresholding_%d.raw", threshold);
+    sprintf(out_filename, "../data/output/fixed_thresholding_%d.raw", threshold);
 
     Image *image = read_image(filename, height, width, channels);
     if (!image) {
