@@ -349,3 +349,43 @@ Matrix *serpentine_error_diffusion(Matrix *image, Matrix *filter, BYTE threshold
     free_matrix(padded_image);
     return output_image;
 }
+
+Matrix *RGB_to_CMY(Matrix *image) {
+    int height = image->height;
+    int width = image->width;
+    int channels = image->channels;
+
+    Matrix *output = alloc_matrix(height, width, channels);
+    if (!output) {
+        return NULL;
+    }
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            for (int k = 0; k < channels; k++) {
+                output->data[i][j][k] = 1 - (image->data[i][j][k] / (float) MAX_INTENSITY);
+            }
+        }
+    }
+    return output;
+}
+
+Matrix *CMY_to_RGB(Matrix *image) {
+    int height = image->height;
+    int width = image->width;
+    int channels = image->channels;
+
+    Matrix *output = alloc_matrix(height, width, channels);
+    if (!output) {
+        return NULL;
+    }
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            for (int k = 0; k < channels; k++) {
+                output->data[i][j][k] = 1 - (image->data[i][j][k] / (float) MAX_INTENSITY);
+            }
+        }
+    }
+    return output;
+}

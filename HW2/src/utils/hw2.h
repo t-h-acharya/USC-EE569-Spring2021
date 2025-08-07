@@ -37,4 +37,7 @@ Matrix *raster_convolution(Matrix *image, Matrix *filter);
 Matrix *serpentine_convolution(Matrix *image, Matrix *filter);
 
 Matrix *serpentine_error_diffusion(Matrix *image, Matrix *filter, BYTE threshold);
+
+Matrix *RGB_to_CMY(Matrix *image);
+Matrix *CMY_to_RGB(Matrix *image);
 #endif
