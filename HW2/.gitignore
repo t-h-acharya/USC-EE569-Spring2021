@@ -1,2 +1,11 @@
+# Object files
+*.o
+
 # VS Code directory
 .vscode/
+
+
+# Other common build artifacts
+*.out
+*.a
+*.so

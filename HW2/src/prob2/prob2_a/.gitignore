@@ -1,12 +1,4 @@
-# Object files
-*.o
-
 # Executables
 fixed_thresholding
 random_thresholding
 dithering_matrix
-
-# Other common build artifacts
-*.out
-*.a
-*.so
