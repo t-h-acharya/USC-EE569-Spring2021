@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     int N = (int) pow(2, atoi(argv[5]));
 
     char out_filename[100];
-    sprintf(out_filename, "./data/output/dithering_matrix_%d.raw", N);
+    sprintf(out_filename, "../data/output/dithering_matrix_%d.raw", N);
 
     Image *image = read_image(filename, height, width, channels);
     if (!image) {
@@ -27,10 +27,14 @@ int main(int argc, char **argv) {
     }
 
     int **dithering_matrix = get_dithering_matrix(N);
+    if(!dithering_matrix) {
+        free_image(image);
+        exit(EXIT_FAILURE);
+    }
 
     float **thresholding_matrix = (float **)malloc(N * sizeof(float *));
     if (!thresholding_matrix) {
-        fprintf(stderr, "ERROR: Memory could not be allocated for thresholding matrix\n");
+        fprintf(stderr, "ERROR: main() \n\t Memory could not be allocated for thresholding matrix\n");
         free(thresholding_matrix);
         free_image(image);
     }
@@ -38,7 +42,7 @@ int main(int argc, char **argv) {
     for (int i = 0; i < N; i++) {
         thresholding_matrix[i] = (float *)malloc(N * sizeof(float));
         if (!thresholding_matrix[i]) {
-            fprintf(stderr, "ERROR: Memory could not be allocated for thresholding matrix\n");
+            fprintf(stderr, "ERROR: main() \n\t Memory could not be allocated for thresholding matrix\n");
             for (int j = 0; j < i; j++) {
                 free(thresholding_matrix[j]);
             }
@@ -76,7 +80,27 @@ int main(int argc, char **argv) {
 
 int **get_dithering_matrix(int N) {
     if (N == 2) {
-        int dithering_matrix[2][2] = {{1, 2}, {3, 0}};
+        int** dithering_matrix = (int **)malloc(N * sizeof(int *));
+        if (!dithering_matrix) {
+            fprintf(stderr, "ERROR: get_dithering_matrix() \n\t Memory could not be allocated.");
+            return NULL;
+        }
+        for (int i = 0; i < N; i++) {
+            dithering_matrix[i] = (int *)malloc(N * sizeof(int));
+            if (!dithering_matrix[i]) {
+                fprintf(stderr, "ERROR: get_dithering_matrix() \n\t Memory could not be allocated.");
+                for (int j = 0; j < i; j++) {
+                    free(dithering_matrix[j]);
+                }
+                free(dithering_matrix);
+                return NULL;
+            }
+        }
+
+        dithering_matrix[0][0] = 1;
+        dithering_matrix[0][1] = 2;
+        dithering_matrix[1][0] = 3;
+        dithering_matrix[1][1] = 0;
         return dithering_matrix;
     }
 
