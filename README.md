@@ -5,6 +5,16 @@ This repository contains my solutions to problem sets for EE569: Introduction to
 ## Repository Structure
 The repository is organized by homework assignments or problem sets, with each folder containing the relevant code, data, and documentation.
 
+- **HW2**: Edge Detection, Digital Half-toning, Color Half-toning with Error Diffusion
+    - Sobel Edge Detector
+    - Canny Edge Detector
+    - Structured Edge
+    - Performance Evaluation
+    - Dithering
+    - Error Diffusion
+    - Separable Error Diffusion
+    - MBVQ-based Error diffusion 
+
 ## Usage
 This repository is intended for personal reference and educational purposes. Please respect USC's academic integrity policies and do not copy solutions for submission.
 
