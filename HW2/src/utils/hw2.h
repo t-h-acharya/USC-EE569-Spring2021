@@ -36,4 +36,5 @@ Matrix *matrix_padding(Matrix *image, Matrix *filter);
 Matrix *raster_convolution(Matrix *image, Matrix *filter);
 Matrix *serpentine_convolution(Matrix *image, Matrix *filter);
 
+Matrix *serpentine_error_diffusion(Matrix *image, Matrix *filter, BYTE threshold);
 #endif

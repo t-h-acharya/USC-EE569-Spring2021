@@ -281,3 +281,71 @@ Matrix *serpentine_convolution(Matrix *image, Matrix *filter) {
     free_matrix(padded_image);
     return output_image;
 }
+
+Matrix *serpentine_error_diffusion(Matrix *image, Matrix *filter, BYTE threshold) {
+    int height = image->height;
+    int width = image->width;
+    int channels = image->channels;
+    int filter_height = filter->height;
+    int filter_width = filter->width;
+    int filter_channels = filter->channels;
+    int height_offset = (filter_height - 1) / 2;
+    int width_offset = (filter_width - 1) / 2;
+
+    Matrix *padded_image = image_padding(image, filter);
+    if (!padded_image) {
+        return NULL;
+    }
+
+    Matrix *output_image = alloc_matrix(height, width, channels);
+    if (!output_image) {
+        free_matrix(padded_image);
+        return NULL;
+    }
+
+    Matrix *filter_flipped = alloc_matrix(filter_height, filter_width, filter_channels);
+    if (!filter_flipped) {
+        free_matrix(padded_image);
+        free_matrix(output_image);
+        return NULL;
+    }
+
+    for (int i = 0; i < filter_height; i++) {
+        for (int j = 0; j < filter_width; j++) {
+            for (int k = 0; k < filter_channels; k++) {
+                filter_flipped->data[i][j][k] = filter->data[i][filter_width - 1 - j][k];
+            }
+        }
+    }
+    
+    float error;
+    for (int k = 0; k < channels; k++) {
+        for (int i = 0; i < height; i++) {
+            if ((i % 2) == 0) {
+                for (int j = 0; j < width; j++) {
+                    output_image->data[i][j][k] = (padded_image->data[i + height_offset][j + width_offset][k] > threshold) ? MAX_INTENSITY : MIN_INTENSITY;
+                    error = padded_image->data[i + height_offset][j + width_offset][k] - output_image->data[i][j][k];
+                    for (int a = -height_offset; a <= height_offset; a++) {
+                        for (int b = -width_offset; b <= width_offset; b++) {
+                            padded_image->data[i + a][j + b][k] += filter->data[a + height_offset][b + width_offset][1] * error;
+                        }
+                    }
+                }
+            }
+            else {
+                for (int j = width - 1; j >= 0; j--) {
+                    output_image->data[i][j][k] = (padded_image->data[i + height_offset][j + width_offset][k] > threshold) ? MAX_INTENSITY : MIN_INTENSITY;
+                    error = padded_image->data[i + height_offset][j + width_offset][k] - output_image->data[i][j][k];
+                    for (int a = -height_offset; a <= height_offset; a++) {
+                        for (int b = -width_offset; b <= width_offset; b++) {
+                            padded_image->data[i + a][j + b][k] += filter_flipped->data[a + height_offset][b + width_offset][1] * error;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    free_matrix(padded_image);
+    return output_image;
+}
