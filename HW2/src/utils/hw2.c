@@ -2,7 +2,7 @@
 
 Image *alloc_image(int height, int width, int channels) {
     if ((height <= 0) || (width <= 0) || (channels <= 0)) {
-        fprintf(stderr, "ERROR: In alloc_image(); Invalid Image Dimensions\n");
+        fprintf(stderr, "ERROR: alloc_image() \n\t Invalid Image Dimensions\n");
         return NULL;
     }
 
@@ -12,7 +12,7 @@ Image *alloc_image(int height, int width, int channels) {
     image->channels = channels;
     image->data = (float ***)malloc(height * sizeof(float **));
     if (!image->data) {
-        fprintf(stderr, "ERROR: In alloc_image(); Image could not be allocated\n");
+        fprintf(stderr, "ERROR: alloc_image() \n\t Image could not be allocated\n");
         return NULL;
     }
     for (int i = 0; i < height; i++) {
@@ -26,7 +26,7 @@ Image *alloc_image(int height, int width, int channels) {
             }
             free(image->data);
             free(image);
-            fprintf(stderr, "ERROR: In alloc_image(); Image could not be allocated\n");
+            fprintf(stderr, "ERROR: alloc_image() \n\t Image could not be allocated\n");
             return NULL;
          }
          for (int j = 0; j < width; j++) {
@@ -40,7 +40,7 @@ Image *alloc_image(int height, int width, int channels) {
                 }
                 free(image->data);
                 free(image);
-                fprintf(stderr, "ERROR: In alloc_image(); Image could not be allocated\n");
+                fprintf(stderr, "ERROR: alloc_image() \n\t Image could not be allocated\n");
                 return NULL;
             }
          }
@@ -67,7 +67,6 @@ Image *copy_image(Image *image) {
 void free_image(Image *image) {
     int height = image->height;
     int width = image->width;
-    int channels = image->channels;
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
@@ -85,7 +84,7 @@ Image *read_image(string filename, int height, int width, int channels) {
     FILE *file_ptr = fopen(filename, "rb");
     if (!file_ptr)
     {
-        fprintf(stderr, "ERROR: In read_image(); File could not be opened\n");
+        fprintf(stderr, "ERROR: read_image() \n\t File could not be opened\n");
         return NULL;    
     }
 
@@ -111,7 +110,7 @@ void write_image(string filename, Image *image) {
     FILE *file_ptr = fopen(filename, "wb");
     if (!file_ptr)
     {
-        fprintf(stderr, "ERROR: In write_image(); File could not be opened\n");
+        fprintf(stderr, "ERROR: write_image() \n\t File could not be opened\n");
         return;    
     }
 

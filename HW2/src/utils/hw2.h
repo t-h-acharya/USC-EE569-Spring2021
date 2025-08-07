@@ -7,6 +7,10 @@
 #include <stdint.h>
 #include <math.h>
 
+// Constants
+#define MAX_INTENSITY UINT8_MAX
+#define MIN_INTENSITY 0
+
 // Typedef
 typedef char* string;
 typedef uint8_t BYTE;
@@ -17,10 +21,6 @@ typedef struct
     int channels;
     float ***data;
 } Image;
-
-// Constants
-const BYTE MAX_INTENSITY = UINT8_MAX;
-const BYTE MIN_INTENSITY = 0;
 
 // Functions
 Image *alloc_image(int height, int width, int channels);
