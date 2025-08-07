@@ -32,4 +32,8 @@ void write_matrix(string filename, Matrix *image);
 
 BYTE to_BYTE(float value);
 
+Matrix *matrix_padding(Matrix *image, Matrix *filter);
+Matrix *raster_convolution(Matrix *image, Matrix *filter);
+Matrix *serpentine_convolution(Matrix *image, Matrix *filter);
+
 #endif

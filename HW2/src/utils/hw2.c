@@ -140,3 +140,144 @@ BYTE to_BYTE(float value) {
         return round(value);
     }
 }
+
+Matrix *image_padding(Matrix *image, Matrix *filter) {
+    int height = image->height;
+    int width = image->width;
+    int channels = image->channels;
+    int filter_height = filter->height;
+    int filter_width = filter->width;
+
+    int new_height = height + (filter_height - 1);
+    int new_width = width + (filter_width - 1);
+
+    int height_offset = (filter_height - 1) / 2;
+    int width_offset = (filter_width - 1) / 2;
+    Matrix *output_image = alloc_matrix(new_height, new_width, channels);
+    if (!output_image) {
+        return NULL;
+    }
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            for (int k = 0; k < channels; k++) {
+                output_image->data[i + height_offset][j + width_offset][k] = image->data[i][j][k];
+            }
+        }
+    }
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width_offset; j++) {
+            for (int k = 0; k < channels; k++) {
+                output_image->data[i][width_offset - j][k] = output_image->data[i][width_offset + 1 + j][k];
+                output_image->data[i][width_offset - j][k] = output_image->data[i][width_offset + 1 + j][k];
+            }
+        }
+    }
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width_offset; j++) {
+            for (int k = 0; k < channels; k++) {
+                output_image->data[i][width_offset - j][k] = output_image->data[i][width_offset + 1 + j][k];
+                output_image->data[i][width_offset - j][k] = output_image->data[i][width_offset + 1 + j][k];
+            }
+        }
+    }
+
+    return output_image;
+}
+
+Matrix *raster_convolution(Matrix *image, Matrix *filter) {
+    int height = image->height;
+    int width = image->width;
+    int channels = image->channels;
+    int filter_height = filter->height;
+    int filter_width = filter->width;
+    int filter_channels = filter->channels;
+    int height_offset = (filter_height - 1) / 2;
+    int width_offset = (filter_width - 1) / 2;
+
+    Matrix *padded_image = image_padding(image, filter);
+    if (!padded_image) {
+        return NULL;
+    }
+
+    Matrix *output_image = alloc_matrix(height, width, channels);
+    if (!output_image) {
+        free_matrix(padded_image);
+        return NULL;
+    }
+
+    float window_sum;
+
+    for (int k = 0; k < channels; k++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                window_sum = 0;
+                for (int a = -height_offset; a <= height_offset; a++) {
+                    for (int b = -width_offset; b <= width_offset; b++) {
+                        window_sum += filter->data[a + height_offset][b + width_offset][1] * padded_image->data[i + height_offset + a][j + width_offset + b][k];
+                    }
+                }
+                output_image->data[i][j][k] = window_sum;
+            }
+        }
+    }
+
+    free_matrix(padded_image);
+    return output_image;
+}
+
+Matrix *serpentine_convolution(Matrix *image, Matrix *filter) {
+    int height = image->height;
+    int width = image->width;
+    int channels = image->channels;
+    int filter_height = filter->height;
+    int filter_width = filter->width;
+    int filter_channels = filter->channels;
+    int height_offset = (filter_height - 1) / 2;
+    int width_offset = (filter_width - 1) / 2;
+
+    Matrix *padded_image = image_padding(image, filter);
+    if (!padded_image) {
+        return NULL;
+    }
+
+    Matrix *output_image = alloc_matrix(height, width, channels);
+    if (!output_image) {
+        free_matrix(padded_image);
+        return NULL;
+    }
+
+    float window_sum;
+
+    for (int k = 0; k < channels; k++) {
+        for (int i = 0; i < height; i++) {
+            if ((i % 2) == 0) {
+                for (int j = 0; j < width; j++) {
+                    window_sum = 0;
+                    for (int a = -height_offset; a <= height_offset; a++) {
+                        for (int b = -width_offset; b <= width_offset; b++) {
+                            window_sum += filter->data[a + height_offset][b + width_offset][1] * padded_image->data[i + height_offset + a][j + width_offset + b][k];
+                        }
+                    }
+                    output_image->data[i][j][k] = window_sum;
+                }
+            }
+            else {
+                for (int j = width - 1; j >= 0; j--) {
+                    window_sum = 0;
+                    for (int a = -height_offset; a <= height_offset; a++) {
+                        for (int b = -width_offset; b <= width_offset; b++) {
+                            window_sum += filter->data[a + height_offset][b + width_offset][1] * padded_image->data[i + height_offset + a][j + width_offset + b][k];
+                        }
+                    }
+                    output_image->data[i][j][k] = window_sum;
+                }
+            }
+        }
+    }
+
+    free_matrix(padded_image);
+    return output_image;
+}
