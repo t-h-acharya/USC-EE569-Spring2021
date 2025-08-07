@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv) {
     if (argc != 5) {
-        fprintf(stderr, "USAGE: ./fixed_thresholding filename height width channels");
+        fprintf(stderr, "USAGE: ./random_thresholding filename height width channels");
         exit(EXIT_FAILURE);
     }
 

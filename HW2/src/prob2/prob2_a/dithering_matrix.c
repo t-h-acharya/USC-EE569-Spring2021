@@ -4,7 +4,7 @@ int **get_dithering_matrix(int N);
 
 int main(int argc, char **argv) {
     if (argc != 6) {
-        fprintf(stderr, "USAGE: ./fixed_thresholding filename height width channels index_matrix_size");
+        fprintf(stderr, "USAGE: ./dithering_matrix filename height width channels index_matrix_size");
         exit(EXIT_FAILURE);
     }
 
